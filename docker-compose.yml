@@ -1,0 +1,21 @@
+version: '3.2'
+  
+services: 
+
+  db:
+    image: "postgres:11"
+    ports: 
+      - "5432:5432"
+    environment: 
+      - POSTGRES_PASSWORD=13579
+      - POSTGRES_DB=api
+    volumes:
+      - "~/var/lib/postgresql/data:/var/lib/postgresql/data"
+
+  server:
+    build: .
+    image: bienemann/sample-spring-api:latest
+    ports:
+      - "8080:8080"
+    links:
+      - "db:PSQL"

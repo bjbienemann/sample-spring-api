@@ -1,0 +1,19 @@
+# --restart always
+docker run --name api-db -p 5432:5432 \
+-e TZ=America/Sao_Paulo -e POSTGRES_PASSWORD=13579 -e POSTGRES_DB=api \
+-v /var/lib/postgresql/data:/var/lib/postgresql/data -d postgres:11.2
+
+docker pull dpage/pgadmin4
+docker run --name pgadmin -p 8088:80 --link=api-db \
+-e "PGADMIN_DEFAULT_EMAIL=bjbienemann@gmail.com" \
+-e "PGADMIN_DEFAULT_PASSWORD=tech13579" \
+-d dpage/pgadmin4
+
+docker rm -f api
+
+docker rmi api:latest  
+
+docker build -t api .
+
+# --restart always 
+docker run --name api --link api-db:PSQL -p 8880:8080 -d api
